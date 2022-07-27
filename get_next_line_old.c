@@ -1,0 +1,66 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mstroeva <mstroeva@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/24 14:52:35 by mstroeva          #+#    #+#             */
+/*   Updated: 2022/07/24 20:36:54 by mstroeva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
+
+NEW VERSION :( 
+
+
+Function name 	get_next_line
+Prototype		char *get_next_line(int fd);
+Turn in files	get_next_line.c, get_next_line_utils.c, get_next_line.h
+Parameters fd:	The file descriptor to read from
+Return value	Read line:		correct behavior
+				NULL: there is nothing else to read, or an error occurred
+External functs.read, malloc, free
+Description		Write a function that returns a line read from 
+				a file descriptor
+
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <files>.c
+
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c 
+get_next_line.h get_next_line_utils.c main.c
+
+cc -D BUFFER_SIZE=42 get_next_line.c get_next_line.h get_next_line_utils.c main.c
+printf("");
+
+gcc -g -Og -std=gnu99 -Wall -Wextra -Werror -D 
+BUFFER_SIZE=5 get_next_line.c get_next_line.h get_next_line_utils.c main.c
+
+valgrind --leak-check=full ./a.out 
+
+*/
+
+#include "get_next_line.h"
+
+char	*get_next_line(int fd)
+{
+	static char	*box;
+	char		*line;
+	int			n_found;
+//	static int	x;
+
+//	printf("\n==================new get next line cycle %d:\n", x++);
+//	printf(">>>old box1(from prev iterations): (\033[3;30m%s\n\033[0m)", box);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	box = ft_load_buf(box, fd);
+	if (!box)
+		return(NULL);
+	n_found = search_n(box);
+//	printf(">>>box1(load with n): \033[1;36m(%s)%d\n\033[0m", box, n_found);
+	line = ft_formline(box, n_found);
+	box = ft_formbox(box);
+//	printf(">>>gnl'line//box\033[1;33m(%s)%ld\033[0m//", line, ft_strlen(line));
+//	printf("\033[1;32m(%s)%ld\033[0m\n", box, ft_strlen(box));
+	return (line);
+}
